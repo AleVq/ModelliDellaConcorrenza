@@ -1,0 +1,113 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\author{Alessandro Vasquez}
+
+% Environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\qed}{\nobreak \ifvmode \relax \else
+	\ifdim\lastskip<1.5em \hskip-\lastskip
+	\hskip1.5em plus0em minus0.5em \fi \nobreak
+	\vrule height0.75em width0.5em depth0.25em\fi}
+
+\newenvironment{bprooftree}
+{\leavevmode\hbox\bgroup}
+{\DisplayProof\egroup}
+% End of environments
+
+\title{Modelli della concorrenza - Formule}
+\begin{document}
+	\maketitle
+	\newpage
+\section{Logica di Hoare}
+\subsection{Regole di derivazione primitive}
+
+\subsubsection{Istruzione vuota}
+Sia data una formula proposizionale $\alpha$. Allora:
+\begin{prooftree}
+	\AxiomC{}
+	\UnaryInfC{$\{\alpha\}\: skip \:\{\alpha\}$}
+\end{prooftree}
+
+\subsubsection{Assegnamento}
+Sia data una formula proposizionale $\alpha$, una variabile $x$ e un'espressione $E$. Allora:
+\begin{prooftree}
+	\AxiomC{}
+	\UnaryInfC{$\{\alpha \left[\frac{E}{x} \right]\}\ x := E \ \{\alpha\} $}
+\end{prooftree}
+
+\subsubsection{Conseguenza}
+Siano date le formule proposizionali $p,\ q,\ p_1,\ q_1$ e il programma $P$. Allora:	
+\[
+\begin{bprooftree}
+	\AxiomC{$ p_1 \rightarrow p $}
+	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
+	\BinaryInfC{$ \{ p_1 \}\ P\ \{ q \}$}
+\end{bprooftree}\qquad
+\begin{bprooftree}
+	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
+	\AxiomC{$ q \rightarrow q_1 $}
+	\BinaryInfC{$ \{ p \}\ P\ \{ q_1 \}$}
+\end{bprooftree}
+\]
+Dalle ultime due deduzioni si ottiene induttivamente la seguente:
+\begin{prooftree}
+	\AxiomC{$ p_1 \rightarrow p $}
+	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
+	\AxiomC{$ q \rightarrow q_1 $}
+	\TrinaryInfC{$ \{ p_1 \}\ P\ \{ q_1 \}$}
+\end{prooftree}
+
+\subsubsection{Sequenza}
+Siano date le formule proposizionali $p,\ q,\ r$ e le istruzioni $C_1, \ C_2$. Allora:	
+\begin{prooftree}
+	\
+	\AxiomC{$ \{ p \}\ C_1\ \{ q \}$}
+	\AxiomC{$ \{ q \}\ C_2\ \{ r \}$}
+	\BinaryInfC{$ \{ p \}\ C_1\, ;\, C_2\ \{ r \}  $}
+\end{prooftree}
+
+\subsubsection{Iterazione}
+Siano dati un ciclo iterativo, la relativa condizione $B$, una sua invariante $i$, e il corpo del ciclo $C$. Allora:
+
+\begin{prooftree}
+	
+	\AxiomC{$ \{ i \land B \}\ C\ \{ i \}$}
+	\UnaryInfC{$ \{ i \}\ \tt while\ B\ do\ C\ od\rm \ \{ i \land \neg B \}$}
+\end{prooftree}
+
+\subsection{Regole di derivazione induttive}
+Siano date le formule proposizionali $p,\ q,\ r$ e il programma $P$. Allora:	
+
+\begin{prooftree}
+	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
+	\AxiomC{$ \{ r \}\ P\ \{ q \}$}
+	\BinaryInfC{$ \{ p \lor r \}\ P\ \{ q \}$}
+\end{prooftree}
+
+Nel caso in cui $r = \neg p$, la precondizione nella conclusione della deduzione diventa una tautologia:
+
+\begin{prooftree}
+	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
+	\AxiomC{$ \{ \neg p \}\ P\ \{ q \}$}
+	\BinaryInfC{$ \{ p \lor \neg p \}\ P\ \{ q \}$}
+\end{prooftree}
+
+\end{document}
