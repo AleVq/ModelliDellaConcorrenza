@@ -190,8 +190,8 @@ Si supponga di avere una tripla di Hoare priva della precondizione: $P\{q\}$. Si
 Tramite l'assioma dell'assegnamento \`e possibile ottenere la precondizione pi\`u debole possibile. \\
 \begin{es}
 	Si supponga di avere la seguente tupla: $$C_1;C_2\{q\}.$$ 
-	Tramite l'assioma dell'assegnamento posso ottenere la tripla $$\vdash\{wp(C_2,q)\}\ C_2\ \{q\}\footnote{wp = weakest precondition}.$$
-	Applicando gli assiomi di assegnamento e di sequenza, ottengo la tripla $$\{wp(C_1, wp(C_2,q))\}\ C_1;C_2\ \{q\},$$ che \`e la pi\`u debole precondizione della tupla iniziale.
+	Tramite l'assioma dell'assegnamento applicato a $C_2\{q\}$ posso ottenere la tripla $$\vdash\{wp(C_2,q)\}\ C_2\ \{q\}\footnote{wp = weakest precondition}.$$
+	Applicando poi l'assioma di assegnamento e l'assioma di sequenza a $C_1$, ottengo la tripla $$\{wp(C_1, wp(C_2,q))\}\ C_1;C_2\ \{q\},$$ che \`e la pi\`u debole precondizione della tupla iniziale.
 \end{es}
 
 
