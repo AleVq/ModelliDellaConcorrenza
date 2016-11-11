@@ -1,0 +1,49 @@
+% !TEX root = ../ModelliDellaConcorrenza.tex
+
+\chapter*{Introduzione}
+Sia dato un programma $P$. Ci si vuole convincere del suo buon funzionamento. Vi sono tre diverse strade che si posso intraprendere:
+\begin{itemize}
+	\item Sperimentazione
+	\item Metodo assiomatico
+	\item Model-checking
+\end{itemize}
+Questo corso tratter\`a le ultime due metodologie. Pi\`u precisamente, si divider\`a in tre parti:
+\begin{enumerate}
+	\item Correttezza dei programmi sequenziali
+	\item Modelli della concorrenza
+	\item Model-checking
+\end{enumerate}
+Si riporta ora un esempio che introduce all'applicazione del metodo assiomatico.
+\begin{es}
+	\label{es:001intro}
+	Sia data la seguente funzione:
+	\begin{lstlisting}
+		int f (int n, int v[]){ //n = dimensione di v
+			int x = v[0];
+			int h = 1;
+			while (h < n){
+				if (x < v[h]){
+					x = v[h];
+					h = h+1;
+				}
+			}
+			return x;
+		}
+	\end{lstlisting}
+A una prima analisi la funzione sembra ordinare il vettore in modo decrescente. Pi\`u formalmente, si pu\`o assumere che i requisiti della funzione siano i seguenti: 
+	\begin{equation}
+	\label{eq:requirements}
+	\begin{array}{rcl}\forall i \in \{0,..,n-1\}\ :\ v[i] \leq x,\\
+	\exists i \in \{0,..,n-1\}\ :\ x=v[i].\end{array}
+	\end{equation}
+	Si vuole dimostrare  tali requisiti per induzione sulla dimensione del vettore $v$. Sia data quindi la seguente ipotesi induttiva: 
+	$$ Hp\ ind: \left\{ \begin{array}{rcl}
+	 \forall i \in \{0,..,h-1\}\ :\ v[i] \leq x, \\
+	\exists i \in \{0,..,h-1\}\ :\ x=v[i].
+\end{array} \right. $$
+	\`E necessario effettuare il passo induttivo e dimostrare tali propriet\`a per i casi base.
+\end{es}
+
+Formalizzando l'esempio \ref{es:001intro} si ottiene la tripla: $$\{n>0\}\ P\ \{\alpha\}.$$
+Dove $n>1$ \`e chiamata precondizione, $P$ \`e il programma o la funzione e $\alpha$ \`e la postcondizione che consiste dei requisiti esplicitati in \eqref{eq:requirements}. \\
+Tale formalismo sar\`a ripreso nel capitolo \ref{chap:logicaHoare}.

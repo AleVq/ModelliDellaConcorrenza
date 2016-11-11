@@ -1,50 +1,10 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[latin1]{inputenc}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{bussproofs}
-\usepackage{hyperref}
-\usepackage{thmtools}
-%\usepackage{fullpage} % Less margins
+% !TEX root = ../ModelliDellaConcorrenza.tex
+\chapter{Logica di Hoare}
+\label{chap:logicaHoare}
 
-\hypersetup{
-	colorlinks,
-	citecolor=black,
-	filecolor=black,
-	linkcolor=black,
-	urlcolor=black
-}
-
-
-\author{Alessandro Vasquez}
-\renewcommand{\contentsname}{Indice}
-% Environments
-\declaretheoremstyle[
-	headfont=\normalfont\bfseries,
-	numberwithin=section]{normalhead}
-\declaretheorem[style=normalhead, name={Definizione}]{deff}
-\declaretheorem[style=normalhead, name={Lemma}]{lemma}
-\declaretheorem[style=normalhead, name={Esempio}]{es}
-
-
-
-\newenvironment{bprooftree}
-{\leavevmode\hbox\bgroup}
-{\DisplayProof\egroup}
-% End of environments
-
-\title{Modelli della concorrenza - Formulario}
-\begin{document}
-	\maketitle
-	\newpage
-	\tableofcontents
-	\newpage
-\section{Logica di Hoare}
-\subsection{Correttezza parziale}
-\subsubsection{Regole di derivazione primitive}
+\section{Correttezza parziale}
+Riprendendo le strutture delle triple, si vuole ora costruire un sistema formale basato sulla deduzione naturale e sui seguenti assiomi.
+\subsection{Assiomi e regole di inferenza}
 
 \paragraph{Istruzione vuota}
 Sia data una formula proposizionale $\alpha$. Allora:
@@ -64,14 +24,14 @@ Sia data una formula proposizionale $\alpha$, una variabile $x$ e un'espressione
 Siano date le formule proposizionali $p,\ q,\ p_1,\ q_1$ e il programma $P$. Allora:	
 \[
 \begin{bprooftree}
-	\AxiomC{$ p_1 \rightarrow p $}
-	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
-	\BinaryInfC{$ \{ p_1 \}\ P\ \{ q \}$}
+\AxiomC{$ p_1 \rightarrow p $}
+\AxiomC{$ \{ p \}\ P\ \{ q \}$}
+\BinaryInfC{$ \{ p_1 \}\ P\ \{ q \}$}
 \end{bprooftree}\qquad
 \begin{bprooftree}
-	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
-	\AxiomC{$ q \rightarrow q_1 $}
-	\BinaryInfC{$ \{ p \}\ P\ \{ q_1 \}$}
+\AxiomC{$ \{ p \}\ P\ \{ q \}$}
+\AxiomC{$ q \rightarrow q_1 $}
+\BinaryInfC{$ \{ p \}\ P\ \{ q_1 \}$}
 \end{bprooftree}
 \]
 Dalle ultime due deduzioni si ottiene induttivamente la seguente:
@@ -101,7 +61,7 @@ Siano dati un ciclo iterativo, la relativa condizione $B$, una sua invariante $i
 	\UnaryInfC{$ \{ i \}\ \tt while\ B\ do\ C\ od\rm \ \{ i \land \neg B \}$}
 \end{prooftree}
 
-\subsubsection{Regole di derivazione ottenibili induttivamente}
+\subsection{Regole di derivazione ottenibili induttivamente}
 Siano date le formule proposizionali $p,\ q,\ r$ e il programma $P$. Allora:	
 
 \begin{prooftree}
@@ -127,7 +87,7 @@ Siano date le formule proposizionali $p,\ q$. Siano dati inoltre una condizione 
 	\BinaryInfC{$ \{ p \}\ R\ \{ q \}$}
 \end{prooftree}
 \newpage
-\subsection{Correttezza totale}
+\section{Correttezza totale}
 Si vuole verificare la terminazione di un programma dato. La non-terminazione pu\`o avvenire solo in presenza di cicli: ci si concentrer\`a sullo studio di programmi iterativi.
 Si supponga di avere un programma $P$ che presenta un ciclo while $W$ il cui corpo \`e denotato con $C$. \\
 Si supponga di aver determinato un invariante $i$ del ciclo. Dimostrare che il $P$ termina significa determinare una espressione $E$ e un invariante $p$, indipendente da $E$ e da $i$, tali che:
@@ -136,7 +96,7 @@ Si supponga di aver determinato un invariante $i$ del ciclo. Dimostrare che il $
 	\item $ \vdash_p \{ p \land B \land E=K  \}\ C\ \{E < K\}   $
 \end{enumerate}
 
-\subsubsection{Definizioni e notazioni}
+\subsection{Definizioni e notazioni}
 \begin{deff}
 	Sia $V$ l'insieme delle variabili di un programma $P$. Uno stato $\sigma$ di P \`e una funzione $$\sigma: V \rightarrow \mathbb{Z}.$$
 \end{deff}
@@ -182,17 +142,40 @@ Dati $\sigma \in \Sigma$ e $ p \in \Pi$, si dir\`a che la formula $p$ \`e valida
 		\item $m(p \land q) = m(p) \cap m(q)$
 		\item $(m \rightarrow q) = (\Sigma \setminus m(p) )\cup m(q)$
 	\end{itemize}
-in cui l'ultima uguaglianza \`e data dal fatto che $p \rightarrow q \equiv \neg p \lor q$\footnote{Si veda la definizione di $\beta$-formula.}.
+	in cui l'ultima uguaglianza \`e data dal fatto che $p \rightarrow q \equiv \neg p \lor q$\footnote{Si veda la definizione di $\beta$-formula.}.
 \end{lemma}
 
-\subsubsection{Determinare la precondizione}
+\subsection{Determinare la precondizione}
 Si supponga di avere una tripla di Hoare priva della precondizione: $P\{q\}$. Si rende necessario trovare un metodo per determinarne la precondizione.\\
-Tramite l'assioma dell'assegnamento \`e possibile ottenere la precondizione pi\`u debole possibile. \\
+Tramite l'assioma dell'assegnamento \`e possibile ottenere la precondizione pi\`u debole possibile\footnote{La precondizione che pone meno vincoli allo stato iniziale del programma}. \\
 \begin{es}
 	Si supponga di avere la seguente tupla: $$C_1;C_2\{q\}.$$ 
 	Tramite l'assioma dell'assegnamento applicato a $C_2\{q\}$ posso ottenere la tripla $$\vdash\{wp(C_2,q)\}\ C_2\ \{q\}\footnote{wp = weakest precondition}.$$
-	Applicando poi l'assioma di assegnamento e l'assioma di sequenza a $C_1$, ottengo la tripla $$\{wp(C_1, wp(C_2,q))\}\ C_1;C_2\ \{q\},$$ che \`e la pi\`u debole precondizione della tupla iniziale.
+	Applicando poi l'assioma di assegnamento e l'assioma di sequenza a $C_1$, ottengo la tripla $$\{wp(C_1, wp(C_2,q))\}\ C_1;C_2\ \{q\},$$ nella quale compare la pi\`u debole precondizione della tupla iniziale.
 \end{es}
 
-
-\end{document}
+\begin{es}
+	\label{es:wpIter}
+	Sia dato un generico programma iterativo $P\{q\}$:
+	\begin{lstlisting}
+	while B do
+	C
+	od
+	\end{lstlisting}
+	Si vuole determinare la precondizione pi\`u debole.
+	Vi possono essere due possibili condizioni: $B$ \`e vera o no. 
+	\begin{enumerate}
+		\item Se $B$ \`e falsa prima del ciclo allora il while viene saltato e $P$ equivale a un'istruzione vuota. La precondizione in questo caso deve coincidere con la postcondizione: $$\{\neg B \land q \}.$$
+		\item Se $B$ \`e vera prima del ciclo allora posso pensare di provare ad eseguire una volta il corpo del ciclo subito prima del ciclo stesso:
+		\begin{lstlisting}
+		C
+		while B do
+		C
+		od
+		\end{lstlisting}
+		Posso quindi estrarre la precondizione pi\`u debole di $C$: $$wp(C, q) = (B \land wp(C;P,q)).$$
+		Mettendo insieme le due precondizioni ottengo: $$wp(P, q)=\{(\neg B \land q )  \lor (B \land wp(C;P,q))\}.$$
+	\end{enumerate}
+\end{es}
+Il risultato dell'esempio \ref{es:wpIter} potrebbe sembrare insoddisfacente: si \`e giunti a una formula pi\`u complessa di quella iniziale. \\
+In effetti il calcolo di $wp$ per un programma iterativo non porta meccanicamente a un risultato: tale calcolo non definisce un algoritmo, la soluzione pu\`o essere determinata grazie a metodologie euristiche informalmente giustificate. Tuttavia, nei programmi non iterativi il calcolo di $wp$ pu\`o essere usato meccanicamente per determinare una soluzione.
