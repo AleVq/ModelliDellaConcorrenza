@@ -1,7 +1,35 @@
 % !TEX root = ../ModelliDellaConcorrenza.tex
 \chapter{Logica di Hoare}
 \label{chap:logicaHoare}
+\section{Premessa}
+D'ora in avanti gli esempi saranno applicati a programmi scritti con un linguaggio giocattolo la cui grammatica \`e la seguente:\\
+\tt 
+\\
+E::= n | x | (-E) | (E+E) | (E*E) | ... \\ 
+B::=  true | false | ( NOT B) | (B AND  B) | (B OR B) | (E < E) | (E = E)\\
+C::= X := E | skip | C;C | if B then C else C fi | while B do C od
+\rm \\
+\\
+\tt E \rm rappresenta le variabili semplici quali costanti intere o variabili di programma.\\
+\tt B \rm rappresenta le espressioni booleane.\\
+\tt C \rm rappresenta i comandi ammessi dal linguaggio.\\
 
+\begin{es}
+	Sia dato il programma $P$:
+	\begin{lstlisting}
+	y:=1; z:=0;
+	while z!=x do
+		z:=z+1;
+		y:=y*z
+	od
+	\end{lstlisting}
+\end{es}
+A una prima occhiata $P$ sembra calcolare $x!$ in $y$. Supponendo vera tale ipotesi, si scriver\`a $$\{x \geq 0\}\ P\ \{y = x!\}.$$
+Tale espressione \`e nota come Tripla di Hoare. In questo caso, se si esegue $P$ nello stato iniziale determinato dalla precondizione $\{x \geq 0\}$ e si ottiene la postcondizione $\{y = x!\}$, si dir\`a che la tripla \`e valida. Il sistema delle triple di Hoare equivale al sistema di contratti tra programmatori (DBC, Design By Contract).
+
+\begin{deff}
+	La "fotografia" dei valori delle variabili di un programma in un certo momento viene detta \bf stato di un programma\rm. Tale "fotografia" pu\`o essere interpretata come un vettore contente i valori di tutte le variabili del programma.
+\end{deff}
 \section{Correttezza parziale}
 Riprendendo le strutture delle triple, si vuole ora costruire un sistema formale basato sulla deduzione naturale e sui seguenti assiomi.
 \subsection{Assiomi e regole di inferenza}
@@ -88,12 +116,12 @@ Siano date le formule proposizionali $p,\ q$. Siano dati inoltre una condizione 
 \end{prooftree}
 \newpage
 \section{Correttezza totale}
-Si vuole verificare la terminazione di un programma dato. La non-terminazione pu\`o avvenire solo in presenza di cicli: ci si concentrer\`a sullo studio di programmi iterativi.
+Si vuole verificare la terminazione di un programma dato. Poich\'e la non-terminazione pu\`o avvenire solo in presenza di cicli, ci si concentrer\`a sullo studio di programmi iterativi.\\
 Si supponga di avere un programma $P$ che presenta un ciclo while $W$ il cui corpo \`e denotato con $C$. \\
-Si supponga di aver determinato un invariante $i$ del ciclo. Dimostrare che il $P$ termina significa determinare una espressione $E$ e un invariante $p$, indipendente da $E$ e da $i$, tali che:
+Si supponga di aver determinato un invariante $i$ del ciclo. Per dimostrare che $P$ termina \`e necessario determinare una espressione $E$ e un invariante $p$, indipendente da $E$ e da $i$, tali che:
 \begin{enumerate}
-	\item $ p \rightarrow E \geq 0$
-	\item $ \vdash_p \{ p \land B \land E=K  \}\ C\ \{E < K\}   $
+	\item $ p \rightarrow E \geq 0,$
+	\item $ \vdash_p \{ p \land B \land E=K  \}\ C\ \{E < K\}.  $
 \end{enumerate}
 
 \subsection{Definizioni e notazioni}
@@ -170,7 +198,7 @@ Tramite l'assioma dell'assegnamento \`e possibile ottenere la precondizione pi\`
 		\begin{lstlisting}
 		C
 		while B do
-		C
+			C
 		od
 		\end{lstlisting}
 		Posso quindi estrarre la precondizione pi\`u debole di $C$: $$wp(C, q) = (B \land wp(C;P,q)).$$

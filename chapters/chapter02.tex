@@ -1,0 +1,54 @@
+% !TEX root = ../ModelliDellaConcorrenza.tex
+
+\chapter{Modelli della concorrenza}
+
+\section{Introduzione}
+
+Si vuole definire un formalismo per l'analisi di correttezza di programmi concorrenti.
+
+\subsection{Sintassi}
+Saranno ora definiti gli elementi di base del formalismo che si vuole definire.
+	Siano $\mathcal{K}$ l'insieme di tutti i possibili processi e $Act$ l'insieme di tutte le possibili azioni: $$ Act=  \mathcal{A} \cup \overline{\mathcal{A}} \cup \{\tau\},$$ dove $\overline{\mathcal{A}} = \{\overline{a}\ |\ a \in \mathcal{A} \}$ \`e l'insieme delle coazioni di $a$.\\
+\begin{deff}
+	\label{def:ccsExpr}
+	Si definisce espressione CCS una qualunque delle seguenti:
+	\begin{itemize}
+		\item \texttt{Nil} (il processo vuoto, denotato con $\emptyset$)
+		\item $K$ (quale nome di un processo qualunque: $K \in \mathcal{K}$)
+		\item $\alpha.P,$ dove $\alpha \in Act$
+		\item $ \Sigma_{i \in I} P_i$
+		\item $P_1\ |\ P_2$ (composizione parallela)
+		\item $P \setminus L,$ ove $ L \subseteq A,$ ad esempio $P \setminus \{a, c\} $ significa che $P$ non pu\`o interagire con l'ambiente usando una qualunque tra le azioni $a, c, \overline{a}, \overline{c}$
+		\item $P[f],$ dove $f$ \`e una funzione $f: Act \rightarrow Act$ tale che: $$f(\tau)=\tau,$$
+		$$f(\overline{a})=\overline{f(a)} $$
+	\end{itemize}
+\end{deff}
+La definizione \ref{def:ccsExpr} \`e ottenuta per induzione strutturale sui processi $P_i$.
+\begin{lemma}
+La coazione di una coazione $a$ \`e $a$ stessa: $\overline{(\overline{a})}=a.$
+\end{lemma}
+
+\begin{deff}
+	Una specifica o programma CCS sar\`a un insieme di equazioni che specificano per ogni processo qual \`e l'espressione CCS che specifica il suo comportamento. L'insieme di equazioni sar\`a del tipo: $$K = P,\ K \in \mathcal{K}.$$
+\end{deff}
+Per ognuna di tali equazioni valgono le seguenti propriet\`a:
+\begin{itemize}
+	\item per ogni $K$ viene definita una sola equazione
+	\item \`e ammessa la ricorsione, ad es. $K = a.\overline{b}.K$ che equivale a dire che il processo $K$ esegue $a$, poi $\overline{b}$ e poi si comporta come $K$ stesso
+\end{itemize}
+
+Si vuole definire ora un sistema di precedenza tra le operazioni. In questo corso vale il seguente sistema:
+\begin{enumerate}
+	\item $\setminus L;$
+	\item $P[f];$
+	\item $\alpha.P;$
+	\item $|$;
+	\item $+$.
+\end{enumerate}
+Le operazioni sono elencante per ordine decrescente di priorit\`a.
+\begin{es}
+	L'equazione $$ R + a.P\ |\ b.Q \setminus L$$ equivale all'equazione $$ R + (\ (a.P)\ |\ (b.(Q \setminus L))\ ).$$
+\end{es}
+
+\subsection{Semantica}
+Si vuole passare dal sistema CCS precedentemente definito a un labelled transition systems (LTS). 
