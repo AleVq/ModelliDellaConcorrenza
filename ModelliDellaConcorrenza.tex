@@ -5,12 +5,15 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{stackengine}
 \usepackage{bussproofs}
 \usepackage{hyperref}
 \usepackage{thmtools}
 \usepackage{listings}
 %\usepackage{fullpage} % Less margins
-
+\makeatletter
+\newcommand{\xRightarrow}[2][]{\ext@arrow 0359\Rightarrowfill@{#1}{#2}}
+\makeatother
 \hypersetup{
 	colorlinks,
 	citecolor=black,
@@ -62,6 +65,7 @@
 	\include{chapters/chapter00}
 	\part{Correttezza dei programmi sequenziali}
 	\include{chapters/chapter01}
+	\part{Modelli della concorrenza}
 	\include{chapters/chapter02}
 
 \end{document}

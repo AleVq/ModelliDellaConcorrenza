@@ -194,7 +194,7 @@ Tramite l'assioma dell'assegnamento \`e possibile ottenere la precondizione pi\`
 	Vi possono essere due possibili condizioni: $B$ \`e vera o no. 
 	\begin{enumerate}
 		\item Se $B$ \`e falsa prima del ciclo allora il while viene saltato e $P$ equivale a un'istruzione vuota. La precondizione in questo caso deve coincidere con la postcondizione: $$\{\neg B \land q \}.$$
-		\item Se $B$ \`e vera prima del ciclo allora posso pensare di provare ad eseguire una volta il corpo del ciclo subito prima del ciclo stesso:
+		\item Se $B$ \`e vera prima del ciclo allora \`e possibile pensare di provare ad eseguire una volta il corpo del ciclo subito prima del ciclo stesso:
 		\begin{lstlisting}
 		C
 		while B do

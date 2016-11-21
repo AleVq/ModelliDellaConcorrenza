@@ -1,14 +1,13 @@
 % !TEX root = ../ModelliDellaConcorrenza.tex
 
-\chapter{Modelli della concorrenza}
 
-\section{Introduzione}
+\chapter{Introduzione}
 
 Si vuole definire un formalismo per l'analisi di correttezza di programmi concorrenti.
 
-\subsection{Sintassi}
+\section{Sintassi}
 Saranno ora definiti gli elementi di base del formalismo che si vuole definire.
-	Siano $\mathcal{K}$ l'insieme di tutti i possibili processi e $Act$ l'insieme di tutte le possibili azioni: $$ Act=  \mathcal{A} \cup \overline{\mathcal{A}} \cup \{\tau\},$$ dove $\overline{\mathcal{A}} = \{\overline{a}\ |\ a \in \mathcal{A} \}$ \`e l'insieme delle coazioni di $a$.\\
+	Siano $\mathcal{K}$\footnote{Talvota ci si riferir\`a a tale insieme come: $P_{CCS}.$} l'insieme di tutti i possibili processi e $Act$ l'insieme di tutte le possibili azioni: $$ Act=  \mathcal{A} \cup \overline{\mathcal{A}} \cup \{\tau\},$$ dove $\overline{\mathcal{A}} = \{\overline{a}\ |\ a \in \mathcal{A} \}$ \`e l'insieme delle coazioni di $a$.\\
 \begin{deff}
 	\label{def:ccsExpr}
 	Si definisce espressione CCS una qualunque delle seguenti:
@@ -50,5 +49,132 @@ Le operazioni sono elencante per ordine decrescente di priorit\`a.
 	L'equazione $$ R + a.P\ |\ b.Q \setminus L$$ equivale all'equazione $$ R + (\ (a.P)\ |\ (b.(Q \setminus L))\ ).$$
 \end{es}
 
-\subsection{Semantica}
+\section{Semantica}
 Si vuole passare dal sistema CCS precedentemente definito a un labelled transition systems (LTS). 
+\subsection{Semantica operazionale strutturale}
+Per introdurre un nuovo LTS, \`e necessario fissare un insieme di regole di inferenza, come \`e stato fatto nella logica di Hoare. Tali regole presentano espressioni CCS nelle loro proposizioni.
+\subsubsection{Regole di base}
+
+\begin{bprooftree}
+	\AxiomC{}
+	\UnaryInfC{$\alpha.P \xrightarrow{\alpha} P$}
+\end{bprooftree}
+
+\subsubsection{Regola della somma}
+\begin{bprooftree}
+	\AxiomC{$\alpha.P_i \xrightarrow{\alpha} P_j$}
+	\RightLabel{$j \in I$}
+	\UnaryInfC{$\sum_{i \in I}\ \alpha.P_i \xrightarrow{\alpha} P_j$}
+\end{bprooftree}
+
+\subsubsection{Regole della composizione parallela}
+\[
+\begin{bprooftree}
+	\AxiomC{$P \xrightarrow{\alpha}P'$}
+	\RightLabel{$\alpha \in Act$}
+	\UnaryInfC{$P\ |\ Q \xrightarrow{\alpha} P'\ |\ Q$}
+\end{bprooftree}\qquad
+\begin{bprooftree}
+	\AxiomC{$Q \xrightarrow{\alpha}Q'$}
+	\RightLabel{$\alpha \in Act$}
+	\UnaryInfC{$P\ |\ Q \xrightarrow{\alpha} P\ |\ Q'$}
+\end{bprooftree}
+\]
+Mettendo insieme le ultime due, si ottiene la seguente:\\
+\[
+\begin{bprooftree}
+		\AxiomC{$P \xrightarrow{\alpha}P'$}
+		\AxiomC{$Q \xrightarrow{\alpha}Q'$}
+		\RightLabel{$\alpha \in Act$}
+		\BinaryInfC{$P\ |\ Q \xrightarrow{\alpha} P'\ |\ Q'$}
+\end{bprooftree}
+\]
+
+\subsubsection{Regola della restrizione}
+\begin{bprooftree}
+	\AxiomC{$P \xrightarrow{\alpha} P'$}
+	\RightLabel{$\alpha, \overline{\alpha} \notin L$}
+	\UnaryInfC{$P \setminus L \xrightarrow{\alpha} P' \setminus L$}
+\end{bprooftree}
+\subsubsection{Regola delle etichettature}
+\begin{bprooftree}
+	\AxiomC{$P \xrightarrow{\alpha} P'$}
+	\UnaryInfC{$P[f]  \xrightarrow{f(a)} P'[f] $}
+\end{bprooftree}
+
+\subsubsection{Regola della sostituzione}
+\begin{bprooftree}
+	\AxiomC{$P \xrightarrow{\alpha} P'$}
+	\RightLabel{$P = K$}
+	\UnaryInfC{$K \xrightarrow{\alpha} K' $}
+\end{bprooftree}
+
+\subsection{Equivalenza rispetto alle tracce}
+\begin{deff}
+	Dato un processo $P$, si definisce "tracce di P" l'insieme: $$Tracce(P)=\{w \in A_{CCS}^* : P \xrightarrow{w} P'  \}, $$ dove $ P \xrightarrow{w} P' $ equivale a dire che: $$ \exists\ P_1,..,P_n \in P_{CCS} : P \xrightarrow{x_1} P_1 \xrightarrow{x_2} P_2..\xrightarrow{x_n} P_n = P',$$
+	con $w=x_1..x_n : x_i \in A_{CCS}.$\\
+	Nel caso in cui $n=0$ avr\`o che $P=P'$.
+\end{deff}
+Due processi $P, Q$ si diranno \emph{equivalenti rispetto alle tracce} sse $Tracce(P)=Tracce(Q)$. Tale fatto \`e denotato come: $$P \thicksim^{T} Q.$$
+Tale relazione di equivalenza non \`e sufficiente ai nostri scopi: non distinguendo le $tau$-transizioni tale relazione \`e troppo debole per i nostri scopi. Sar\`a necessario introdurre un'altra relazione.
+
+\subsection{Bisimulazione}
+\subsubsection{Bisimulazione forte}
+\begin{deff}
+	Sia $P \in P_{CCS}.$ Sia inoltre $\mathcal{R} \subseteq P_{CCS} \times P_{CCS} $ una relazione binaria. $\mathcal{R}$ \`e detta di bisimulazione forte sse $ \forall P, Q \in P_{CCS}, P\mathcal{R}Q$ sse:
+	\begin{itemize}
+		\item $ \forall \alpha \in A_{CCS}, P \xrightarrow{\alpha} P'$ allora $\exists Q' : Q \xrightarrow{\alpha} Q' \land P'\mathcal{R}Q',$
+		\item $ \forall \alpha \in A_{CCS}, Q \xrightarrow{\alpha} Q'$ allora $\exists P' : P \xrightarrow{\alpha} P' \land P'\mathcal{R}Q'.$
+	\end{itemize}
+$P$ e $Q$ si diranno allora bisimili e si denoteranno nel seguente modo: $$P \thicksim^{Bis} Q.$$
+\end{deff}
+\begin{deff}
+	La relazione $\thicksim^{Bis}$ \`e definita nel seguente modo: $$ \thicksim^{Bis} = \bigcup \{\mathcal{R}: \mathcal{R} \text{ \`e relazione di bisimulazione} \}.$$ $\thicksim^{Bis} $ \`e una relazione di equivalenza.
+\end{deff}
+Si pu\`o dire che due processi $P, Q \in P_{CCS} $ sono bisimili sse $\forall \alpha \in A_{CCS}:$
+\begin{itemize}
+	\item $\forall P': P \xrightarrow{\alpha}P', \exists Q': Q \xrightarrow{\alpha} Q' \land P' \thicksim^{Bis} Q',$
+	\item $\forall Q': Q \xrightarrow{\alpha}Q', \exists P': P \xrightarrow{\alpha} P' \land P' \thicksim^{Bis} Q'.$
+\end{itemize}
+Si introducono ora alcune regole di equivalenza rispetto alla bisimulazione. \\
+Siano $P, Q \in P_{CCS} \land P \thicksim^{Bis} Q,$ allora:
+\begin{itemize}
+	\item $\alpha.P \thicksim^{Bis} \alpha.Q,\ \forall \alpha \in A_{CCS}$
+	\item $P + Z \thicksim^{Bis} Q + Z,\ \forall Z \in P_{CCS}$
+	\item $P\ |\ Z \thicksim^{Bis} Q\ |\ Z,\ \forall Z \in P_{CCS}$
+	\item $P \setminus L \thicksim^{Bis} Q \setminus L,\ \forall L \in A_{CCS}$
+	\item $P[f] \thicksim^{Bis} Q[f],\ \forall f: \in A_{CCS} \rightarrow A_{CCS}$
+\end{itemize}
+Da tali regole \`e possibile concludere che $\thicksim^{Bis}$ \`e una relazione di congruenza.
+
+\subsubsection{Bisimulazione debole}
+Si supponga di voler astrarre la relazione di bisimulazione dalle $\tau$-transizioni. Ci\`o \`e necessario nell'ottica di astrarre l'osservazione delle transizioni da quelle non osservabili (appunto, le $\tau$-transizioni).\\
+\`E necessario introdurre una regola che possa astrarre dalle $\tau$-transizioni. 
+\begin{deff}
+	La relazione $\Rightarrow$ \`e definita come segue: $$\forall \alpha \in A_{CCS},\ P \xRightarrow{\alpha} P' \text{ sse } P \xrightarrow{\tau^*} \xrightarrow{\alpha} \xrightarrow{\tau^*} P',\ \forall P, P' \in P_{CCS}.$$
+\end{deff}
+La relazione $'\Rightarrow'$ \`e dunque definita come segue: $$'\Rightarrow'\ \subseteq P_{CCS} \times A_{CCS} \times P_{CCS}.$$
+
+\begin{deff}
+	Le \emph{tracce osservabili} sono definite come l'insieme: $$L(P) = \{ w \in (A \cup \overline{A})^* : P \xRightarrow{w}\ \}.$$
+\end{deff}
+
+\begin{deff}
+	Sia data una relazione $\mathcal{R} \subseteq P_{CCS} \times P_{CCS}. $ $\mathcal{R} $ \`e detta \emph{bisimulazione debole} sse:
+	\begin{itemize}
+		\item se $P \mathcal{R} Q, $ allora $\forall \alpha \in A_{CCS}$\footnote{Si ricorda che $\tau \in A_{CCS}.$} se $P \xrightarrow{\alpha} P', \text{ allora } \exists Q' : Q \xRightarrow{\alpha} Q' \land P' \mathcal{R} Q',$
+		\item $ se Q \xrightarrow{\alpha} Q',$ allora $ P \xRightarrow{\alpha} \land P' \mathcal{R} Q'.$
+	\end{itemize}
+\end{deff}
+\begin{lemma}
+	Vale la seguente relazione: $$ P \xrightarrow{\tau} \land P \xRightarrow{\tau^*} P'.$$ \`E dunque possibile che $P'$ coincida con $P$.
+\end{lemma}
+Allora si dir\`a che $$P \approx^{Bis} Q \text{ sse } \exists \mathcal{R} \text{ di bisimulazione debole tale che } P \mathcal{R} Q.$$
+\begin{deff}
+	La relazione $ \approx^{Bis}$ pu\`o essere definita come segue: $$\approx^{Bis} = \bigcup \{\mathcal{R}\ |\ \mathcal{R} \text{ \`e relazione di bisimulazione debole}\}. $$
+\end{deff}
+Come per la bisimulazione forte, \`e possibile dire che due processi $P, Q \in P_{CCS}$ sono debolmente bisimili sse: 
+\begin{itemize}
+	\item $\forall \alpha \in A_{CCS},\ \forall P' : P \xrightarrow{\alpha}P',\ \exists Q': Q \xRightarrow{\alpha}Q' \land P' \approx^{Bis} Q',$
+	\item $\forall \alpha \in A_{CCS},\ \forall Q' : Q \xrightarrow{\alpha}Q',\ \exists P': P \xRightarrow{\alpha}P' \land P' \approx^{Bis} Q'.$
+\end{itemize}
