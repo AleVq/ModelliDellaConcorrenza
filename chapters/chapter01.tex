@@ -207,3 +207,18 @@ Tramite l'assioma dell'assegnamento \`e possibile ottenere la precondizione pi\`
 \end{es}
 Il risultato dell'esempio \ref{es:wpIter} potrebbe sembrare insoddisfacente: si \`e giunti a una formula pi\`u complessa di quella iniziale. \\
 In effetti il calcolo di $wp$ per un programma iterativo non porta meccanicamente a un risultato: tale calcolo non definisce un algoritmo, la soluzione pu\`o essere determinata grazie a metodologie euristiche informalmente giustificate. Tuttavia, nei programmi non iterativi il calcolo di $wp$ pu\`o essere usato meccanicamente per determinare una soluzione.
+
+\subsection{Teoremi fondamentali}
+Utilizzando le seguenti notazioni: 
+$$ \vdash_{HL} = \text{ tripla derivata tramite logica di Hoare}$$
+$$ \models = \text{ validit\`a semantica della tripla post-posta}$$
+\`e possibile introdurre i seguenti teoremi.
+\begin{teor}
+	Correttezza (o soundness):
+$$\vdash_{HL} \{p\}\ P\ \{q\} \rightarrow\  \models\{p\}\ P\ \{q\}.$$
+\end{teor}
+\begin{teor}
+	Completezza:
+	$$\models\{p\}\ P\ \{q\}\ \rightarrow\  \vdash_{HL} \{p\}\ P\ \{q\}.$$
+\end{teor}
+Tali teoremi valgono nel caso in cui le formule logiche $p$ e $q$ siano decidibili.
