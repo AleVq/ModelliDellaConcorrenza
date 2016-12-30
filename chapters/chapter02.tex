@@ -160,21 +160,26 @@ La relazione $'\Rightarrow'$ \`e dunque definita come segue: $$'\Rightarrow'\ \s
 \end{deff}
 
 \begin{deff}
-	Sia data una relazione $\mathcal{R} \subseteq P_{CCS} \times P_{CCS}. $ $\mathcal{R} $ \`e detta \emph{bisimulazione debole} sse:
+	Sia $P \in P_{CCS}.$ Sia inoltre $\mathcal{R} \subseteq P_{CCS} \times P_{CCS} $ una relazione binaria. $\mathcal{R}$ \`e detta di bisimulazione debole sse $ \forall P, Q \in P_{CCS}, P\mathcal{R}Q$ sse:
 	\begin{itemize}
-		\item se $P \mathcal{R} Q, $ allora $\forall \alpha \in A_{CCS}$\footnote{Si ricorda che $\tau \in A_{CCS}.$} se $P \xrightarrow{\alpha} P', \text{ allora } \exists Q' : Q \xRightarrow{\alpha} Q' \land P' \mathcal{R} Q',$
-		\item $ se Q \xrightarrow{\alpha} Q',$ allora $ P \xRightarrow{\alpha} \land P' \mathcal{R} Q'.$
+		\item $ \forall \alpha \in A_{CCS}, P \xrightarrow{\alpha} P'$ allora $\exists Q' : Q \xRightarrow{\alpha} Q' \land P'\mathcal{R}Q',$
+		\item $ \forall \alpha \in A_{CCS}, Q \xrightarrow{\alpha} Q'$ allora $\exists P' : P \xRightarrow{\alpha} P' \land P'\mathcal{R}Q'.$
 	\end{itemize}
+	$P$ e $Q$ si diranno allora debolmente bisimili e si denoteranno nel seguente modo: $$P \approx^{Bis} Q.$$
+	Allora si dir\`a che $$P \approx^{Bis} Q \text{ sse } \exists \mathcal{R} \text{ di bisimulazione debole tale che } P \mathcal{R} Q.$$
 \end{deff}
 \begin{lemma}
-	Vale la seguente relazione: $$ P \xrightarrow{\tau} \land P \xRightarrow{\tau^*} P'.$$ \`E dunque possibile che $P'$ coincida con $P$.
+	Vale la seguente relazione: $$ P \xrightarrow{\tau} P' \land P \xRightarrow{\tau^*} P'.$$ \`E dunque possibile che $P'$ coincida con $P$.
 \end{lemma}
-Allora si dir\`a che $$P \approx^{Bis} Q \text{ sse } \exists \mathcal{R} \text{ di bisimulazione debole tale che } P \mathcal{R} Q.$$
+
 \begin{deff}
 	La relazione $ \approx^{Bis}$ pu\`o essere definita come segue: $$\approx^{Bis} = \bigcup \{\mathcal{R}\ |\ \mathcal{R} \text{ \`e relazione di bisimulazione debole}\}. $$
 \end{deff}
-Come per la bisimulazione forte, \`e possibile dire che due processi $P, Q \in P_{CCS}$ sono debolmente bisimili sse: 
+Come per la bisimulazione forte, \`e possibile dire che due processi $P, Q \in P_{CCS}$ sono debolmente bisimili sse $\forall \alpha \in A_{CCS}$: 
 \begin{itemize}
-	\item $\forall \alpha \in A_{CCS},\ \forall P' : P \xrightarrow{\alpha}P',\ \exists Q': Q \xRightarrow{\alpha}Q' \land P' \approx^{Bis} Q',$
-	\item $\forall \alpha \in A_{CCS},\ \forall Q' : Q \xrightarrow{\alpha}Q',\ \exists P': P \xRightarrow{\alpha}P' \land P' \approx^{Bis} Q'.$
+	\item $\forall P' : P \xrightarrow{\alpha}P',\ \exists Q': Q \xRightarrow{\alpha}Q' \land P' \approx^{Bis} Q',$
+	\item $\forall Q' : Q \xrightarrow{\alpha}Q',\ \exists P': P \xRightarrow{\alpha}P' \land P' \approx^{Bis} Q'.$
 \end{itemize}
+
+\section{Sintassi e semantica a interleaving}
+

@@ -30,26 +30,22 @@ Tale espressione \`e nota come Tripla di Hoare. In questo caso, se si esegue $P$
 \begin{deff}
 	La "fotografia" dei valori delle variabili di un programma in un certo momento viene detta \bf stato di un programma\rm. Tale "fotografia" pu\`o essere interpretata come un vettore contente i valori di tutte le variabili del programma.
 \end{deff}
+\newpage
 \section{Correttezza parziale}
 Riprendendo le strutture delle triple, si vuole ora costruire un sistema formale basato sulla deduzione naturale e sui seguenti assiomi.
 \subsection{Assiomi e regole di inferenza}
-
-\paragraph{Istruzione vuota}
-Sia data una formula proposizionale $\alpha$. Allora:
+Siano date le formule proposizionali $\alpha$, $p$, $p_1$, $q$, $q_1$, $r$, una variabile $x$, un programma $P$, due istruzioni $C_1$, $C_2$, un ciclo iterativo $W$, la relativa condizione $B$ e il corpo $C$. Valgono i seguenti assiomi.\\
+\bf Istruzione vuota	\rm
 \begin{prooftree}
 	\AxiomC{}
 	\UnaryInfC{$\{\alpha\}\: skip \:\{\alpha\}$}
 \end{prooftree}
-
-\paragraph{Assegnamento}
-Sia data una formula proposizionale $\alpha$, una variabile $x$ e un'espressione $E$. Allora:
+\bf Assegnamento \rm
 \begin{prooftree}
 	\AxiomC{}
 	\UnaryInfC{$\{\alpha \left[\frac{E}{x} \right]\}\ x := E \ \{\alpha\} $}
 \end{prooftree}
-
-\paragraph{Conseguenza}
-Siano date le formule proposizionali $p,\ q,\ p_1,\ q_1$ e il programma $P$. Allora:	
+\bf Conseguenza \rm
 \[
 \begin{bprooftree}
 \AxiomC{$ p_1 \rightarrow p $}
@@ -62,52 +58,34 @@ Siano date le formule proposizionali $p,\ q,\ p_1,\ q_1$ e il programma $P$. All
 \BinaryInfC{$ \{ p \}\ P\ \{ q_1 \}$}
 \end{bprooftree}
 \]
-Dalle ultime due deduzioni si ottiene induttivamente la seguente:
 \begin{prooftree}
 	\AxiomC{$ p_1 \rightarrow p $}
 	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
 	\AxiomC{$ q \rightarrow q_1 $}
 	\TrinaryInfC{$ \{ p_1 \}\ P\ \{ q_1 \}$}
 \end{prooftree}
-
-\paragraph{Sequenza}
-Siano date le formule proposizionali $p,\ q,\ r$ e le istruzioni $C_1, \ C_2$. Allora:	
+\bf Sequenza\rm
 \begin{prooftree}
 	\
 	\AxiomC{$ \{ p \}\ C_1\ \{ q \}$}
 	\AxiomC{$ \{ q \}\ C_2\ \{ r \}$}
 	\BinaryInfC{$ \{ p \}\ C_1\, ;\, C_2\ \{ r \}  $}
 \end{prooftree}
-La regola di sequenza \`e utile nei cicli il cui corpo presenta istruzioni diverse che coinvolgono le stesse variabili.
-
-\paragraph{Iterazione}
-Siano dati un ciclo iterativo, la relativa condizione $B$, una sua invariante $i$, e il corpo del ciclo $C$. Allora:
-
+\bf Iterazione\rm
 \begin{prooftree}
 	
 	\AxiomC{$ \{ i \land B \}\ C\ \{ i \}$}
 	\UnaryInfC{$ \{ i \}\ \tt while\ B\ do\ C\ od\rm \ \{ i \land \neg B \}$}
 \end{prooftree}
-
-\subsection{Regole di derivazione ottenibili induttivamente}
-Siano date le formule proposizionali $p,\ q,\ r$ e il programma $P$. Allora:	
+\bf Regole di derivazione ottenibili induttivamente \rm
 
 \begin{prooftree}
 	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
 	\AxiomC{$ \{ r \}\ P\ \{ q \}$}
 	\BinaryInfC{$ \{ p \lor r \}\ P\ \{ q \}$}
 \end{prooftree}
-
-Nel caso in cui $r = \neg p$, la precondizione nella conclusione della deduzione diventa una tautologia:
-
-\begin{prooftree}
-	\AxiomC{$ \{ p \}\ P\ \{ q \}$}
-	\AxiomC{$ \{ \neg p \}\ P\ \{ q \}$}
-	\BinaryInfC{$ \{ p \lor \neg p \}\ P\ \{ q \}$}
-\end{prooftree}
-
-\paragraph{Controllo di flusso}
-Siano date le formule proposizionali $p,\ q$. Siano dati inoltre una condizione $B$, un blocco $P$ (eseguito solo se $B$ \`e verificata) e un blocco $Q$ (eseguito altrimenti). Sia infine $R$ il blocco che include l'istruzione di controllo su $B$ e i blocchi $ P $ e $Q$. Vale la seguente deduzione:
+{\bf Controllo di flusso\rm\\
+Dato un blocco \tt R \rm del tipo \tt if B the P else Q\rm, vale che:
 
 \begin{prooftree}
 	\AxiomC{$ \{ p \land B \}\ P\ \{ q \}$}
@@ -118,7 +96,7 @@ Siano date le formule proposizionali $p,\ q$. Siano dati inoltre una condizione 
 \section{Correttezza totale}
 Si vuole verificare la terminazione di un programma dato. Poich\'e la non-terminazione pu\`o avvenire solo in presenza di cicli, ci si concentrer\`a sullo studio di programmi iterativi.\\
 Si supponga di avere un programma $P$ che presenta un ciclo while $W$ il cui corpo \`e denotato con $C$. \\
-Si supponga di aver determinato un invariante $i$ del ciclo. Per dimostrare che $P$ termina \`e necessario determinare una espressione $E$ e un invariante $p$, indipendente da $E$ e da $i$, tali che:
+Si supponga di aver determinato un invariante $i$ del ciclo. Per dimostrare che $P$ termina \`e necessario determinare una espressione $E$ e un invariante $p$, indipendente da $E$ e da $i$, tale che:
 \begin{enumerate}
 	\item $ p \rightarrow E \geq 0,$
 	\item $ \vdash_p \{ p \land B \land E=K  \}\ C\ \{E < K\}.  $
